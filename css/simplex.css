@@ -1,0 +1,64 @@
+body{
+	text-align: center;
+	background: #9E9E9E;
+	color: #fff;
+	transition: background-color 5s ease;
+	font-size: 20pt;
+}
+hr{
+	border-color : white;
+	background-color : white;
+	color: white;
+}
+
+.hint { display: none; color: rgb(56, 51, 51); font-style: italic; }
+input#iMax:focus + .hint { display :  block }
+
+
+
+#tableInicial{
+	margin-top: 10px;
+}
+table{
+	table-layout: fixed;
+}
+
+table td:first-child {
+	background-color: #8A8A8A;
+}
+
+table tr:first-child {
+	background-color: #8A8A8A;
+}
+
+
+table tr:first-child td:first-child{
+	background-color: #3d3d3d;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+
+button{
+	margin: 3px;
+	font-size: 22pt;
+	color: #777;
+}
+
+input{
+	width: 70px;
+	text-align: center;
+	border-radius: 3px;
+}
+span.input-group-text{
+	font-size: 22pt;
+}
+
+button#firstPhase, button#solveSimplex, button#stepByStep, button#again {
+	font-size: 18pt;
+}
