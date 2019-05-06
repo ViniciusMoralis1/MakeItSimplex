@@ -14,8 +14,6 @@ hr{
 .hint { display: none; color: rgb(56, 51, 51); font-style: italic; }
 input#iMax:focus + .hint { display :  block }
 
-
-
 #tableInicial{
 	margin-top: 10px;
 }
@@ -38,11 +36,9 @@ table tr:first-child td:first-child{
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
-
 
 button{
 	margin: 3px;

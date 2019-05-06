@@ -1,6 +1,6 @@
 function solveSimplex(quantDec,quantRes,choice){
 	$("#inputValues").hide();
-
+	$("#MaxMin").hide();
 	var matrizSimplex = getRestrictionValues(quantDec,quantRes); 
 	matrizSimplex.push(getFunctionzValues(quantDec,quantRes));
 
@@ -24,7 +24,6 @@ function solveSimplex(quantDec,quantRes,choice){
 
 	varsOnHead = staticTblVars[1];
 
-
 	//matriz dimension 
 	columnsCount = quantDec + quantRes + 1;
 	rowsCount    = quantRes + 1 ;
@@ -44,7 +43,6 @@ function solveSimplex(quantDec,quantRes,choice){
 		//find the lower number in functionZ row and its column
 		lowerNumberAndColumn = getLowerNumberAndColumn(matrizSimplex, rowsCount, columnsCount);
 		lowerNumber = lowerNumberAndColumn[0];
-
 
 		if(lowerNumber == 0){
 			break;
@@ -79,12 +77,11 @@ function solveSimplex(quantDec,quantRes,choice){
 
 		//show parcial matriz 
 		if(hasNegativeOrPositive == true){
-			matrizToTable(matrizSimplex,"Parcial"+stopConditionValue,varsOnHead,varsOnBase,rowsCount,allTables,tablesCount);
+			matrizToTable(matrizSimplex,"Parcial "+stopConditionValue,varsOnHead,varsOnBase,rowsCount,allTables,tablesCount);
 			tablesCount++
 		}
 
 	}while(hasNegativeOrPositive == true);
-
 
 	matrizToTable(matrizSimplex,"Final",varsOnHead,varsOnBase,rowsCount,allTables,tablesCount);
 	senseTable(matrizSimplex,varsOnHead,varsOnBase,quantDec,bValues)
@@ -102,8 +99,6 @@ function solveSimplex(quantDec,quantRes,choice){
 }	
 
 function senseTable(matriz, head, base,quantDec,bValues){
-
-
 	var matrizTable = [];
 	var headTable   = [];
 	var baseTable   = [];
@@ -111,7 +106,6 @@ function senseTable(matriz, head, base,quantDec,bValues){
 	var restNames  = []
 	var restValues = []
 	var minMaxValues = []
-	
 
 	for (let i = 0; i < matriz.length; i++){
     	matrizTable[i] = matriz[i].slice();
@@ -179,38 +173,48 @@ function senseTable(matriz, head, base,quantDec,bValues){
 
 	
 
-	senseMatriz.unshift(['Recursos','Sombra','Min','Max','Inicial']);
-	$(".container").append('<div class="row"><h3>Tabela Final</h3></div>')
-	$(".container").append('<div class="row"><div id="divFinalTableBegin" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><table id="finalTableBegin" class="table table-bordered"></table></div></div>')
-	var table = $("#finalTableBegin");
-	var row, cell;
+	senseMatriz.unshift(['Rec','Sombra','Min','Max','Inicial']);
+	// $(".container").append('<div class="row"><h3>Tabela Final</h3></div>')
+	// $(".container").append('<div class="row"><div id="divFinalTableBegin" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><table id="finalTableBegin" class="table table-bordered"></table></div></div>')
+	// var table = $("#finalTableBegin");
+	// var row, cell;
 
-	for(let i=0; i< matrizTable.length; i++){
-		row = $( '<tr />' );
-		table.append( row );
-		for(let j=0; j<matrizTable[i].length; j++){
-			if(!isNaN(matrizTable[i][j])){
-				cell = $('<td>'+ (Math.round(matrizTable[i][j]*100)/100 ) +'</td>')
-			}else{
-				cell = $('<td>'+matrizTable[i][j]+'</td>')
-			}
+	// for(let i=0; i< matrizTable.length; i++){
+	// 	row = $('<tr />');
+	// 	table.append(row);
+	// 	for(let j=0; j<matrizTable[i].length; j++){
+	// 		if(!isNaN(matrizTable[i][j])){
+	// 			cell = $('<td>'+ (Math.round(matrizTable[i][j]*100)/100 ) +'</td>')
+	// 		}else{
+	// 			cell = $('<td>'+matrizTable[i][j]+'</td>')
+	// 		}
 			
-			row.append( cell );
-		}
-	}
+	// 		row.append( cell );
+	// 	}
+	// }
 
-	$(".container").append('<hr><div class="row"><h3>Análise de Sensibilidade</h3></div>')
-	$(".container").append('<div class="row"><div id="divSenseTable" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><table id="senseTable" class="table table-bordered"></table></div></div><hr>')
+	$(".container").append('<hr>')
+	$(".container").append('<div class="row"><div id="divSenseTable" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><div class="row"><h3>Análise de Sensibilidade</h3></div><table id="senseTable" class="table table-bordered"></table></div></div><hr>')
 	var table = $("#senseTable");
 	var row, cell;
 
 	for(let i=0; i< senseMatriz.length; i++){
 		row = $( '<tr />' );
+		var infinito = false;
 		table.append( row );
 		for(let j=0; j<senseMatriz[i].length; j++){
 			if(!isNaN(senseMatriz[i][j])){
 				cell = $('<td>'+ (Math.round(senseMatriz[i][j]*100)/100 ) +'</td>')
-			}else{
+				if (j == 1) {
+					if((Math.round(senseMatriz[i][j] * 100) / 100) == 0) {
+						infinito = true;
+					}
+				}
+			}if(j == 3 && infinito == true){
+				cell = $('<td><i>inf</i></td>');
+				infinito = false;
+			}
+			if(isNaN(senseMatriz[i][j])) {
 				cell = $('<td>'+senseMatriz[i][j]+'</td>')
 			}
 			
@@ -219,6 +223,7 @@ function senseTable(matriz, head, base,quantDec,bValues){
 	}
 
 }
+
 //creates a table with the matriz values
 function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
 	$("#auxDiv").html('<div class="row"><div id="divTable'+divName+'" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><div class="row"><h3>Tabela '+divName+':</h3></div><table id="table'+divName+'" class="table table-bordered"></table></div></div>')
@@ -340,7 +345,6 @@ function nullColumnElements(matriz, pivoRow, pivoColumn,rowsCount, columnsCount)
 	return matriz
 }
 
-
 //div each pivo row value / pivo value
 function divPivoRow(matriz, columnsCount , pivoRow, pivoValue){
 	for (var i = 0; i < columnsCount; i++) {
@@ -370,7 +374,6 @@ function whoLeavesBase(matriz, columnLowerNumber, columnsCount, rowsCount, varsO
 					lowerResultRow = i;
 				}
 			}
-
 		}
 	}
 	if(lowerResultRow == undefined){
@@ -401,7 +404,6 @@ function getRestrictionValues(quantDec,quantRes){
 				xvalue[j-1] = parseFloat(input);
 			}
 
-
 		}
 		for (let j= 1; j <= quantRes; j++) {
 			if(i==j){
@@ -418,7 +420,6 @@ function getRestrictionValues(quantDec,quantRes){
 		} else {
 			xvalue.push(parseFloat(input_res));
 		}
-	
 		resValues[i-1] = xvalue;
 		
 	}
@@ -476,10 +477,10 @@ function pauseSolution(){
 	$(".container").remove()
 
 	$("body").append('<div class="container"><div class="row"><div class="offset-md-2 col-md-8 offset-md-2"><h1>Solução impossível</h1></div></div></div>');
-	$(".container").append('<div class="row"><div class="offset-md-4 col-md-4 offset-md-4"><button id="back" class="btn btn-primary" onclick="location.reload();" >Voltar</button></div>	</div>')
+	$(".container").append('<div class="row"><div class="offset-md-4 col-md-4 offset-md-4"><button id="back" class="btn btn-primary" onclick="location.reload();">Voltar</button></div>	</div>')
 }
 
-function firstPhase(){
+function firstPhase(maxOuMin){
 	$(document).ready(function () {
 		
 		//get amount of decisions variables
@@ -506,6 +507,9 @@ function firstPhase(){
 			}
 		}
 
+		console.log(maxOuMin);
+
+		$(".container").append('<h1 id="MaxMin">'+ maxOuMin +'</h1>');
 
 		//hide the first phase button
 		$("#firstPhase").remove();
@@ -531,7 +535,6 @@ function firstPhase(){
 // generate functionZ inputs
 function generateFunctionZ(quantDec){
 
-
 	$(".container").append('<div id="inputValues"></div>');
 	$("#inputValues").append('<br><div class="row"><div class="input-group d-flex justify-content-center mb-3" id="funcZ"></div></div>');
 
@@ -553,7 +556,6 @@ function generateFunctionZ(quantDec){
 
 	input.focus();
 }
-
 
 //generate restrictions inputs
 function generateRestrictions(quantDec,quantRes){
@@ -577,10 +579,4 @@ function generateRestrictions(quantDec,quantRes){
 		$("#divRes"+i).append('<span class="px-2"></span><div class="input-group-prepend"><span class="input-group-text"><b>&le;</b></span></div><input type="number" name="valRestriction'+i+'">');
 	}
 
-	
 }
-
-
-
-
-  
