@@ -202,7 +202,6 @@ function solveSimplex(quantDec,quantRes,choice){
 		pivoColumn = columnLowerNumber;
 		pivoValue  = matrizSimplex[pivoRow][pivoColumn];
 
-
 		matrizSimplex = divPivoRow(matrizSimplex,columnsCount,pivoRow,pivoValue);
 
 		matrizSimplex = nullColumnElements(matrizSimplex,pivoRow,pivoColumn,rowsCount,columnsCount);
@@ -218,8 +217,8 @@ function solveSimplex(quantDec,quantRes,choice){
 		}
 
 		if(hasNegativeOrPositive == true){
-			matrizToTable(matrizSimplex,"Parcial "+stopConditionValue,varsOnHead,varsOnBase,rowsCount,allTables,tablesCount);
-			tablesCount++
+			matrizToTable(matrizSimplex,"Parcial "+varsOnHead,varsOnBase,rowsCount,allTables,tablesCount);
+			tablesCount++;
 		}
 
 	}while(hasNegativeOrPositive == true);
@@ -260,13 +259,11 @@ function senseTable(matriz, head, base,quantDec,bValues){
     	baseTable[i] = base[i].slice();
 	}
 
-
 	matrizTable.unshift(headTable);
 	
 	for (let i = 1, j=0; i <= rowsCount; i++, j++){
 		matrizTable[i].unshift(baseTable[j]);
 	} 
-
 
 	for(let i = quantDec + 1,k=0; i < matrizTable[0].length -1;k++,i++){
 		restNames.push(matrizTable[0][i])
@@ -338,11 +335,9 @@ function senseTable(matriz, head, base,quantDec,bValues){
 			if(isNaN(senseMatriz[i][j])) {
 				cell = $('<td>'+senseMatriz[i][j]+'</td>')
 			}
-			
 			row.append( cell );
 		}
 	}
-
 }
 
 function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
@@ -366,7 +361,6 @@ function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
     	baseTable[i] = base[i].slice();
 	}
 
-
 	$("#solveSimplex").remove();
 	$("#stepByStep	").remove();
 
@@ -384,8 +378,7 @@ function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
 			}else{
 				cell = $('<td>'+matrizTable[i][j]+'</td>')
 			}
-			
-			row.append( cell );
+			row.append(cell);
 		}
 	}
 	allTables[aux] = $('#divTable'+divName+'')[0].outerHTML ;
@@ -476,7 +469,7 @@ function whoLeavesBase(matriz, columnLowerNumber, columnsCount, rowsCount, varsO
 	}
 	if(lowerResultRow == undefined){
 		pauseSolution()
-	}else{
+	}else{	
 		varsOnBase[lowerResultRow] = "x"+(columnLowerNumber+1)
 		return [ lowerResultRow, varsOnBase];
 	}
