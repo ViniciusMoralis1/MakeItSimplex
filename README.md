@@ -47,13 +47,13 @@ O algoritmo da mochila consiste em preencher a mochila com objetos diferentes de
 
 ###Simplex
 
-- Em cada variável da função objetivo e das restrições deve conter apenas o número, sem a adição do 'x', separando os números por ';' e caso tenha alguma variável nula, é necessário inserir o 0.
+- Em cada variável da função objetivo e das restrições deve conter apenas o valor da mesma.
 
 
 ###Mochila
 
-- Não utilizar itens com pesos iguais
-- Serão permitidos somente valores inteiros
+
+- Serão permitidos somente valores inteiros.
 
 
 ##Datas Importantes
