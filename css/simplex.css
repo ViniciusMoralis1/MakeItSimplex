@@ -55,6 +55,6 @@ span.input-group-text{
 	font-size: 22pt;
 }
 
-button#firstPhase, button#solveSimplex, button#stepByStep, button#again {
+button#firstPhase, button#solveSimplex, button#stepByStep, button#again, button#chooseProblem, button#voltar {
 	font-size: 18pt;
 }

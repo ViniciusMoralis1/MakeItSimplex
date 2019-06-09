@@ -1,3 +1,155 @@
+function chooseProblem(tipo){
+	console.log("tipo do problema" + tipo);
+	if(tipo == 'Simplex'){
+		location.href = 'simplex.html';
+	} else {
+		location.href = 'mochila.html';
+	}
+};
+
+function mochila(cap, quantDec){
+	var cap = $("input[name=quantRestriction]").val();
+	var quantDec = $("input[name=quantDecision]").val();
+
+	gerarfuncaoPesoValor(cap,quantDec);
+}
+
+function gerarfuncaoPesoValor(cap, quantDec) {
+	$(".container").append('<div id="inputValues"></div>');
+	$("#inputValues").append('<br><div class="row"><div class="input-group d-flex justify-content-center mb-3" id="funcZ"></div></div>');
+
+	$("#startInputs").hide();
+
+	//Pesos
+
+	$("#funcZ").append('<h2>Pesos = </h2><span class="px-2">');
+	for (let i = 1; i <= quantDec; i++) {
+
+		$("#funcZ").append('<input type="number" name="valX' + i + '">');
+		if (i != quantDec) {
+			$("#funcZ").append('<div class="input-group-append"><span class="input-group-text">x' + i + '</span></div><span class="px-2"><span>');
+		} else {
+			$("#funcZ").append('<div class="input-group-append"><span class="input-group-text">x' + i + '</span></div>');
+		}
+	}
+	var input = $('input[name="valX1"]');
+
+	//Valores
+
+	$("#funcZ").append('<br>');
+
+	$("#inputValues").append('<div class="row"><div class="input-group d-flex justify-content-center mb-3 mt-5" id="divRestTitle"></div></div>');
+	
+	
+	$("#divRestTitle").append('<h2>Valores = </h2><span class="px-2">');
+	for (let i = 1; i <= quantDec; i++) {
+
+		$("#divRestTitle").append('<input type="number" name="valY' + i + '">');
+		if (i != quantDec) {
+			$("#divRestTitle").append('<div class="input-group-append"><span class="input-group-text">x' + i + '</span></div><span class="px-2"><span>');
+		} else {
+			$("#divRestTitle").append('<div class="input-group-append"><span class="input-group-text">x' + i + '</span></div>');
+		}
+	}
+
+	input.focus();
+	$("#inputValues").append('<div id="buttons" class="row"><div class="col-md-6 mt-5"><button id="voltar" onclick="location.reload()" class="btn btn-outline-light">Voltar</button></div></div>');
+	$("#buttons").append('<div class="col-md-6 mt-5"><button id="solveMochila" onclick="resolverMochila(' + cap + ',' + quantDec + ')" class="btn btn-outline-light">Solucionar</button></div>');
+
+}
+
+function resolverMochila(cap, quantDec){
+	//pegar peso e valor dos itens
+	
+	let items = [];
+	for (let i = 1; i <= quantDec; i++) {
+		var inputPeso = $("input[name='valX" + i + "']").val();
+		var inputValor = $("input[name='valY" + i + "']").val();
+		
+		items.push({w: parseFloat(inputPeso), v: parseFloat(inputValor)});
+	}
+	console.log(items);
+
+	$("#inputValues").hide();
+	$("#buttons").hide();
+
+	mostraValorFinal(matrizMochila(items, cap));
+}	
+
+function matrizMochila(items, cap){
+	var memo = [];
+
+	// Filling the sub-problem solutions grid.
+	for (var i = 0; i < items.length; i++) {
+		// Variable 'cap' is the capacity for sub-problems. In this example, 'cap' ranges from 1 to 6.
+		var row = [];
+		for (let c = 1; c <= cap; c++) {
+			row.push(getSolution(i, c));
+		}
+		memo.push(row);
+	}
+
+	return (getLast());
+
+	function getLast() {
+		var lastRow = memo[memo.length - 1];
+		return lastRow[lastRow.length - 1];
+	}
+
+	function getSolution(row, cap) {
+		const NO_SOLUTION = { maxValue: 0, subset: [] };
+		
+		var col = cap - 1;
+		var lastItem = items[row];
+
+		var remaining = cap - lastItem.w;
+
+		var lastSolution = row > 0 ? memo[row - 1][col] || NO_SOLUTION : NO_SOLUTION;
+
+		var lastSubSolution = row > 0 ? memo[row - 1][remaining - 1] || NO_SOLUTION : NO_SOLUTION;
+
+		if (remaining < 0) {
+			return lastSolution;
+		}
+
+		var lastValue = lastSolution.maxValue;
+		var lastSubValue = lastSubSolution.maxValue;
+
+		var newValue = lastSubValue + lastItem.v;
+		if (newValue >= lastValue) {
+			
+			var _lastSubSet = lastSubSolution.subset.slice();
+			_lastSubSet.push(lastItem);
+			return { maxValue: newValue, subset: _lastSubSet };
+		} else {
+			return lastSolution;
+		}
+	}
+}
+
+function mostraValorFinal(valorFinal) {
+	console.log(valorFinal);
+	$(".container").append('<div id="valorFinal"></div>');
+	$("#valorFinal").append('<div class="justify-content-center mb-3" id="valFim"></div>');
+	$("#valFim").append('<h2>O valor final da mochila será: ' + valorFinal.maxValue + ' </h2>');
+	if (valorFinal.subset.length > 1){
+		$("#valFim").append('<h2>A mochila terá ' + valorFinal.subset.length + ' itens </h2><br>');
+		$("#valFim").append('<h2>Os itens presentes na mochila tem os valores: </h2>');
+		for (let i = 1; i <= valorFinal.subset.length; i++) {
+			$("#valFim").append('<h2>Peso do item: ' + valorFinal.subset[i - 1].w + '</h2>');
+			$("#valFim").append('<h2>Valor do item: ' + valorFinal.subset[i - 1].v + '</h2><br>');
+		}
+	} else{
+		$("#valFim").append('<h2>A mochila terá ' + valorFinal.subset.length + ' item </h2><br>');
+
+		$("#valFim").append('<h2>O item presente na mochila tem os valores: </h2>');
+
+		$("#valFim").append('<h2>Peso do item: '+ valorFinal.subset[0].w +'</h2>');
+		$("#valFim").append('<h2>Valor do item: ' + valorFinal.subset[0].v + '</h2><br>');
+	}
+	$(".container").append('<br><div class="row"><div class="col-md-12"><button id="again" class="btn btn-outline-light" onclick="location.reload();" >Voltar</button></div>	</div>');
+}
+
 function solveSimplex(quantDec,quantRes,choice){
 	$("#inputValues").hide();
 	$("#MaxMin").hide();
@@ -19,12 +171,10 @@ function solveSimplex(quantDec,quantRes,choice){
 	var bValues = []
 
 	staticTblVars = staticTableVars(quantDec,quantRes);
-	//initial restrictions vars on the base
 	varsOnBase = staticTblVars[0];
 
 	varsOnHead = staticTblVars[1];
 
-	//matriz dimension 
 	columnsCount = quantDec + quantRes + 1;
 	rowsCount    = quantRes + 1 ;
 
@@ -33,14 +183,11 @@ function solveSimplex(quantDec,quantRes,choice){
 		bValues.push(matrizSimplex[i][columnsCount-1])
 	}
 
-    //show initial matriz
 	matrizToTable(matrizSimplex,"Inicial",varsOnHead,varsOnBase,rowsCount,allTables,0);
 	tablesCount++
 
-	//do it while Z row has negative numbers
 	do{
 
-		//find the lower number in functionZ row and its column
 		lowerNumberAndColumn = getLowerNumberAndColumn(matrizSimplex, rowsCount, columnsCount);
 		lowerNumber = lowerNumberAndColumn[0];
 
@@ -49,7 +196,6 @@ function solveSimplex(quantDec,quantRes,choice){
 		}
 		columnLowerNumber = lowerNumberAndColumn[1];
 
-		//get the lower result of the division between last column and the lower number(functionZ) column
 		whoLeavesResults = whoLeavesBase(matrizSimplex, columnLowerNumber, columnsCount, rowsCount, varsOnBase);
 		varsOnBase = whoLeavesResults[1];
 		pivoRow    = whoLeavesResults[0]
@@ -57,25 +203,20 @@ function solveSimplex(quantDec,quantRes,choice){
 		pivoValue  = matrizSimplex[pivoRow][pivoColumn];
 
 
-		//get the matriz with pivo row update
 		matrizSimplex = divPivoRow(matrizSimplex,columnsCount,pivoRow,pivoValue);
 
-		//null all the other values on the pivo column
 		matrizSimplex = nullColumnElements(matrizSimplex,pivoRow,pivoColumn,rowsCount,columnsCount);
 		
-		//funczValues receive the last row of the matriz('Z row')
 		funczValues = matrizSimplex[rowsCount-1];
 		
 		hasNegativeOrPositive = funczValues.some(v => v < 0);
 	
-		//increments stop condition
 		stopConditionValue += 1;
 
 		if(stopConditionValue == iMax){
 			break;
 		}
 
-		//show parcial matriz 
 		if(hasNegativeOrPositive == true){
 			matrizToTable(matrizSimplex,"Parcial "+stopConditionValue,varsOnHead,varsOnBase,rowsCount,allTables,tablesCount);
 			tablesCount++
@@ -171,27 +312,7 @@ function senseTable(matriz, head, base,quantDec,bValues){
 		senseMatriz[i].push(bValues[i]);
 	}
 
-	
-
 	senseMatriz.unshift(['Rec','Sombra','Min','Max','Inicial']);
-	// $(".container").append('<div class="row"><h3>Tabela Final</h3></div>')
-	// $(".container").append('<div class="row"><div id="divFinalTableBegin" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><table id="finalTableBegin" class="table table-bordered"></table></div></div>')
-	// var table = $("#finalTableBegin");
-	// var row, cell;
-
-	// for(let i=0; i< matrizTable.length; i++){
-	// 	row = $('<tr />');
-	// 	table.append(row);
-	// 	for(let j=0; j<matrizTable[i].length; j++){
-	// 		if(!isNaN(matrizTable[i][j])){
-	// 			cell = $('<td>'+ (Math.round(matrizTable[i][j]*100)/100 ) +'</td>')
-	// 		}else{
-	// 			cell = $('<td>'+matrizTable[i][j]+'</td>')
-	// 		}
-			
-	// 		row.append( cell );
-	// 	}
-	// }
 
 	$(".container").append('<hr>')
 	$(".container").append('<div class="row"><div id="divSenseTable" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><div class="row"><h3>Análise de Sensibilidade</h3></div><table id="senseTable" class="table table-bordered"></table></div></div><hr>')
@@ -224,13 +345,11 @@ function senseTable(matriz, head, base,quantDec,bValues){
 
 }
 
-//creates a table with the matriz values
 function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
 	$("#auxDiv").html('<div class="row"><div id="divTable'+divName+'" class="offset-md-2 col-md-8 offset-md-2 table-responsive"><div class="row"><h3>Tabela '+divName+':</h3></div><table id="table'+divName+'" class="table table-bordered"></table></div></div>')
 	var table = $("#table"+divName);
 	var row, cell;
 
-	//copy the matriz, base and head values
 	var matrizTable = [];
 	var headTable   = [];
 	var baseTable   = [];
@@ -251,15 +370,11 @@ function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
 	$("#solveSimplex").remove();
 	$("#stepByStep	").remove();
 
-	//the matriz receives the head and base vars
-	//appends head vars into matriz
 	matrizTable.unshift(headTable);
-	//set base vars at the beggining of each the matriz rows
 	for (let i = 1, j=0; i <= rowsCount; i++, j++){
 		matrizTable[i].unshift(baseTable[j]);
 	} 
 
-	//creates the table
 	for(let i=0; i<matrizTable.length; i++){
 		row = $( '<tr />' );
 		table.append( row );
@@ -273,11 +388,9 @@ function matrizToTable(matriz, divName, head, base, rowsCount, allTables, aux){
 			row.append( cell );
 		}
 	}
-	//save current table html
 	allTables[aux] = $('#divTable'+divName+'')[0].outerHTML ;
 }
 
-//print results
 function printResults(matriz,quantDec,quantRes,columnsCount,base){
 
 	if(($("#min").is(':checked'))){
@@ -289,7 +402,6 @@ function printResults(matriz,quantDec,quantRes,columnsCount,base){
 
 	$("#solution").append('<div class="col-md-12">A solução ótima é Z = '+zValue+'</div><br>');
 
-	//print the base vars values 
 	for (let i = 0; i < quantRes ; i++) {
 		var baseName = base[i];
 		var baseValue = matriz[i][columnsCount-1];
@@ -298,12 +410,10 @@ function printResults(matriz,quantDec,quantRes,columnsCount,base){
 
 }
 
-//creates the base and head var that goes into table
 function staticTableVars(quantDec,quantRes){
 	base = [];
 	head = [];
 
-	//for each restriction adds a row into base
 	for (let i = 0; i < quantRes ; i++) {
 		base.push("f"+(i+1));
 	}
@@ -311,7 +421,6 @@ function staticTableVars(quantDec,quantRes){
 
 
 	head.push("Base");
-	//for each restriction and decision var adds a row into head
 	for (let i = 0; i < quantDec ; i++) {
 		head.push("x"+(i+1));
 	}
@@ -322,21 +431,16 @@ function staticTableVars(quantDec,quantRes){
 	
 	return [base, head];
 }
-//null the column elements 
 function nullColumnElements(matriz, pivoRow, pivoColumn,rowsCount, columnsCount){
 
 	for (let i = 0; i < rowsCount; i++) {
 
-		// jumps pivo row and the already 0 values on the pivo column
 		if(i==pivoRow || matriz[i][pivoColumn] == 0 ){
 			continue;
 		}
-		//pivo aux receive  the next pivo column number
 		pivoAux = matriz[i][pivoColumn];
 
-		//loop to null pivo column
 		for (let j = 0; j < columnsCount; j++) {
-			//current matriz value = pivo row values multiplied for negative pivo aux plus actual matriz value
 			matriz[i][j] = (matriz[pivoRow][j] * (pivoAux * -1)) + matriz[i][j] ;
 
 		}
@@ -345,7 +449,6 @@ function nullColumnElements(matriz, pivoRow, pivoColumn,rowsCount, columnsCount)
 	return matriz
 }
 
-//div each pivo row value / pivo value
 function divPivoRow(matriz, columnsCount , pivoRow, pivoValue){
 	for (var i = 0; i < columnsCount; i++) {
 		matriz[pivoRow][i]  = matriz[pivoRow][i] / pivoValue;
@@ -354,20 +457,15 @@ function divPivoRow(matriz, columnsCount , pivoRow, pivoValue){
 	return matriz;
 }
 
-// division of b column and the lower number Column
-// adds the var to the base column and returns the lower result row
 function whoLeavesBase(matriz, columnLowerNumber, columnsCount, rowsCount, varsOnBase){
 	var lowerResult = 99999999999999999999999;
 	var lowerResultRow;
 
-	//loop until the last not function Z row
 	for(let i = 0; i < rowsCount-1 ; i++){
-		//not allow div by 0
 		if(!(matriz[i][columnLowerNumber] == 0)){
 			currentValue = 0;
 			currentValue = matriz[i][columnsCount-1] / matriz[i][columnLowerNumber]
 			
-			//make sure that x is positive and lowerResult has the lower value 
 			if(currentValue > 0){
 				if(currentValue < lowerResult){
 					lowerResult    = currentValue;
@@ -379,15 +477,12 @@ function whoLeavesBase(matriz, columnLowerNumber, columnsCount, rowsCount, varsO
 	if(lowerResultRow == undefined){
 		pauseSolution()
 	}else{
-		//adds decision var to the base 
-		
 		varsOnBase[lowerResultRow] = "x"+(columnLowerNumber+1)
 		return [ lowerResultRow, varsOnBase];
 	}
 	
 }
 
-//return the restriction input values
 function getRestrictionValues(quantDec,quantRes){
 	var resValues = [];
 	var xvalue = [];
@@ -423,11 +518,9 @@ function getRestrictionValues(quantDec,quantRes){
 		resValues[i-1] = xvalue;
 		
 	}
-	console.log(resValues);
 	return resValues;
 }
 
-//return functionZ input values
 function getFunctionzValues(quantDec,quantRes){
 	var funcValues = [];
 	var xvalue = [];
@@ -453,17 +546,14 @@ function getFunctionzValues(quantDec,quantRes){
 	return funcValues;
 }
 
-//return the lower number on function Z and its column
 function getLowerNumberAndColumn(matriz,rowCount,columnCount){
 	var column = 0;
 
-	rowCount -= 1;// rowCount now has the correct value to use
+	rowCount -= 1;
 
 	var lowerNumber = matriz[rowCount][0];
 
-	//loop functionZ array to find the lower number value 
 	for (let j = 1 , i = rowCount ; j < columnCount - 1 ; j++) {
-		//make sure that lowerNumber has the lower value
 		if(matriz[i][j] < lowerNumber){
 			lowerNumber = matriz[i][j];
 			column = j;
@@ -472,7 +562,6 @@ function getLowerNumberAndColumn(matriz,rowCount,columnCount){
 	return [lowerNumber , column] ;
 }
 
-//stops the application
 function pauseSolution(){
 	$(".container").remove()
 
@@ -483,7 +572,6 @@ function pauseSolution(){
 function firstPhase(maxOuMin){
 	$(document).ready(function () {
 		
-		//get amount of decisions variables
 		var quantDec = $("input[name=quantDecision]").val();
 		if( quantDec.length == 0 || quantDec == '0') {
 			alert('Você precisa inserir alguma quantia em variavel de decisão');	
@@ -495,7 +583,6 @@ function firstPhase(maxOuMin){
 			}
 		}
 
-		//get amount of restrictions
 		var quantRes = $("input[name=quantRestriction]").val();
 		if( quantRes.length == 0 || quantRes == '0') {
 			alert('Você precisa inserir alguma quantia em variavel de restrição');	
@@ -511,7 +598,6 @@ function firstPhase(maxOuMin){
 
 		$(".container").append('<h1 id="MaxMin">'+ maxOuMin +'</h1>');
 
-		//hide the first phase button
 		$("#firstPhase").remove();
 		$("#startInputs").hide();
 
@@ -519,20 +605,16 @@ function firstPhase(maxOuMin){
 		
 		generateRestrictions(quantDec,quantRes);
 
-		//adds a button that calls the second phase of the process
-		$("#inputValues").append('<div id="buttons" class="row"><div class="col-md-6"><button id="solveSimplex" onclick="solveSimplex(' + quantDec + ',' + quantRes +',1)" class="btn btn-outline-light">Solução direta</button></div></div>');
+		$("#inputValues").append('<div id="buttons" class="row"><div class="col-md-4"><button id="solveSimplex" onclick="solveSimplex(' + quantDec + ',' + quantRes +',1)" class="btn btn-outline-light">Solução direta</button></div></div>');
 
 		$(".container").append('<div id="solution" class="row"></div>')
 		$(".container").append('<br><div class="row"><div id="results" class="col-md"></div></div>');
-
-		$("#buttons").append('<div class="col-md-6"><button id="stepByStep" onclick="solveSimplex(' + quantDec + ',' + quantRes +',2)" class="btn btn-outline-light">Passo a Passo</button></div>');
+		$("#buttons").append('<div class="col-md-4"><button id="voltar" onclick="location.reload()" class="btn btn-outline-light">Voltar</button></div>');
+		$("#buttons").append('<div class="col-md-4"><button id="stepByStep" onclick="solveSimplex(' + quantDec + ',' + quantRes +',2)" class="btn btn-outline-light">Passo a Passo</button></div>');
+		
 
 	});
 }
-
-//dev obs:`String text ${var}` = print var inside a string
-
-// generate functionZ inputs
 function generateFunctionZ(quantDec){
 
 	$(".container").append('<div id="inputValues"></div>');
@@ -540,7 +622,6 @@ function generateFunctionZ(quantDec){
 
 	
 	$("#funcZ").append('<h2>Função Z =</h2><span class="px-2">');
-	// adds the function Z inputs to the body of the page 	
 	for (let i = 1; i <= quantDec; i++) {
 
 		$("#funcZ").append('<input type="number" name="valX'+i+'">');
@@ -557,12 +638,10 @@ function generateFunctionZ(quantDec){
 	input.focus();
 }
 
-//generate restrictions inputs
 function generateRestrictions(quantDec,quantRes){
 
 	$("#inputValues").append('<div class="row"><div class="col-md-12 mb-3" id="divRestTitle"><h2>Restrições:</h2></div></div>');
 
-	//adds the restrictions inputs to the body 
 	for (let i = 1; i <= quantRes ; i++) {
 
 			$("#inputValues").append('<div class="row"><div class="input-group d-flex justify-content-center mb-3" id=divRes'+i+'></div></div>');
@@ -575,8 +654,6 @@ function generateRestrictions(quantDec,quantRes){
 					$("#divRes"+i).append('<div class="input-group-append"><span class="input-group-text">x'+ j +' </span></div>');
 				}
 			}
-		//adds to the body the '<=' expression and the restriction value input
 		$("#divRes"+i).append('<span class="px-2"></span><div class="input-group-prepend"><span class="input-group-text"><b>&le;</b></span></div><input type="number" name="valRestriction'+i+'">');
 	}
-
 }
