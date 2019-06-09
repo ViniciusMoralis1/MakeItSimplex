@@ -37,7 +37,7 @@ table tr:first-child td:first-child{
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    margin: 0; 
 }
 
 button{
@@ -55,6 +55,6 @@ span.input-group-text{
 	font-size: 22pt;
 }
 
-button#firstPhase, button#solveSimplex, button#stepByStep, button#again, button#chooseProblem, button#voltar {
+button#firstPhase, button#solveSimplex, button#stepByStep, button#again, button#chooseProblem, button#voltar, button#solveMochila {
 	font-size: 18pt;
 }

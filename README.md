@@ -1,9 +1,16 @@
 MakeItSimplex
 
+Link da aplicação online: https://makeitsimplex.herokuapp.com/index.html
+
 Repositório para a implementação do algoritmo Simplex e Mochila.
 
 Projeto de Pesquisa Operacional
 5º Semestre BCC UNIVEM
+Prof. Ricardo Sabatine.
+
+Vinicius dos Santos Moralis - 568600
+Fellipe Emanoel Neves da Silva - 554774
+Lucas de Souza dos Reis - 569534
 
 O Simplex permite que se encontre valores ideais em situações em que diversos aspectos precisam ser respeitados. Diante de um problema, são estabelecidas inequações que representam restrições para as variáveis. A partir daí, testa-se possibilidades de maneira a otimizar, isto é, maximizar ou minimizar o resultado da forma mais rápida possível.
 
@@ -16,6 +23,7 @@ O algoritmo da mochila consiste em preencher a mochila com objetos diferentes de
 - JQuery
 - Bootstrap
 - GitHub para hospedagem e versionamento
+- HerokuApp para hospedagem online do site
 
 ## Nota de realease a ser publicado
 

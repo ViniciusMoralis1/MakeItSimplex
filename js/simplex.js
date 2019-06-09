@@ -79,9 +79,7 @@ function resolverMochila(cap, quantDec){
 function matrizMochila(items, cap){
 	var memo = [];
 
-	// Filling the sub-problem solutions grid.
 	for (var i = 0; i < items.length; i++) {
-		// Variable 'cap' is the capacity for sub-problems. In this example, 'cap' ranges from 1 to 6.
 		var row = [];
 		for (let c = 1; c <= cap; c++) {
 			row.push(getSolution(i, c));
