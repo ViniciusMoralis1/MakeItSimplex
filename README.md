@@ -1,6 +1,6 @@
-MakeItSimplex
+# MakeItSimplex
 
-Link da aplicação online: https://makeitsimplex.herokuapp.com/index.html
+[Link da aplicação online](https://makeitsimplex.herokuapp.com/index.html)
 
 Repositório para a implementação do algoritmo Simplex e Mochila.
 
@@ -27,7 +27,7 @@ O algoritmo da mochila consiste em preencher a mochila com objetos diferentes de
 
 ## Nota de realease a ser publicado
 
-###Simplex
+### Simplex
 
 - Algoritmo Simplex para problemas de maximização.
 - Algoritmo Simplex para problemas de minimização.
@@ -35,38 +35,38 @@ O algoritmo da mochila consiste em preencher a mochila com objetos diferentes de
 - Tabela de Sensibilidade.
 - Tabela com os valores Finais.
 
-###Mochila
+### Mochila
 
 - Apresentação do valor final da mochila e os atributos dos itens para aquela capacidade.
 
-##Entradas personalizadas para:
+## Entradas personalizadas para:
 
-###Simplex
+### Simplex
 
 - Limite máximo de iterações
 - Tipo de Simplex (MAX ou MIN)
 - Quantidade de variáveis e restrições
 
-###Mochila
+### Mochila
 - Capacidade da mochila
 - Peso e valor dos itens
 
-##Limitações
+## Limitações
 
-###Simplex
+### Simplex
 
 - Em cada variável da função objetivo e das restrições deve conter apenas o valor da mesma.
 
 
-###Mochila
+### Mochila
 
 
 - Serão permitidos somente valores inteiros.
 
 
-##Datas Importantes
+## Datas Importantes
 
-###Simplex
+### Simplex
 
 Datas | Eventos
 ----------- | ------
@@ -88,7 +88,7 @@ Datas | Eventos
 09/06/19    | Atualizando README
 
 
-###Mochila
+### Mochila
 
 Datas | Eventos
 ---------- | ------
@@ -100,14 +100,14 @@ Datas | Eventos
 04/06/19   | Correção de alguns erros no layout
 09/06/19   | Atualizando README
 
-##Compatibilidade
+## Compatibilidade
 
 Requisitos | Ferramentas
 --------- | ------
 Navegadores     | Mozilla Firefox, Chrome, Internet Explorer
 Sistema Operacional    | Ubuntu, Windows, Mac, RedHat
 
-##Tecnologias
+## Tecnologias
 
 Tecnologias | Ferramentas
 --------- | ------
@@ -116,9 +116,9 @@ Back-End    | Javascript
 Editor de Texto  | VSCode
 Servidor Web    | https://github.io/
 
-##Atividades Realizadas no Período
+## Atividades Realizadas no Período
 
-###Simplex
+### Simplex
 
 Código | Título | Tarefa | Situação | Observação
 --------- | ------ | -------| -------| -------
@@ -129,7 +129,7 @@ Código | Título | Tarefa | Situação | Observação
 5 | Demonstrar passo a passo | Demonstrar ao usuário as alterações na tabela causada pelas iterações do método simplex. | Concluído|
 6  | Tabela de sensibilidade | Demonstrar ao usuário a tabela de sensibilidade. |Concluído|
 
-###Mochila
+### Mochila
 
 Código | Título | Tarefa | Situação | Observação
 --------- | ------ | -------| -------| -------
